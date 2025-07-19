@@ -1,0 +1,29 @@
+{% extends 'model/base.html' %}
+
+{% block title %}Query History - Constitution RAG System{% endblock %}
+
+{% block content %}
+<h2>Query History</h2>
+
+{% if queries %}
+    {% for query in queries %}
+        <div class="document-card">
+            <h3>{{ query.document.title }}</h3>
+            <p><strong>Question:</strong> {{ query.question }}</p>
+            <p><strong>Asked:</strong> {{ query.created_at|date:"M d, Y H:i" }}</p>
+            <p><strong>Response Time:</strong> {{ query.response_time|floatformat:3 }} seconds</p>
+            
+            {% if query.answer %}
+                <div class="context-text">
+                    <strong>Answer:</strong><br>
+                    {{ query.answer|truncatewords:50 }}
+                </div>
+            {% endif %}
+            
+            <a href="{% url 'query_document' query.document.id %}" class="btn">Query Again</a>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No queries yet. <a href="{% url 'document_list' %}">Start by querying a document</a>.</p>
+{% endif %}
+{% endblock %}

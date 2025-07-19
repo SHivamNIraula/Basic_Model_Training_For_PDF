@@ -1,0 +1,36 @@
+{% extends 'model/base.html' %}
+
+{% block title %}Document List - Constitution RAG System{% endblock %}
+
+{% block content %}
+<h2>Your Documents</h2>
+
+{% if documents %}
+    {% for document in documents %}
+        <div class="document-card">
+            <h3>{{ document.title }}</h3>
+            <p><strong>Uploaded:</strong> {{ document.upload_date|date:"M d, Y H:i" }}</p>
+            <p><strong>Size:</strong> {{ document.file_size|filesizeformat }}</p>
+            <p><strong>Status:</strong> 
+                {% if document.is_processed %}
+                    <span style="color: green;">✓ Processed ({{ document.num_chunks }} chunks)</span>
+                {% else %}
+                    <span style="color: orange;">⏳ Processing...</span>
+                {% endif %}
+            </p>
+            
+            {% if document.is_processed %}
+                <a href="{% url 'query_document' document.id %}" class="btn">Query Document</a>
+            {% else %}
+                <button class="btn" disabled>Processing...</button>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No documents uploaded yet. <a href="{% url 'upload_document' %}">Upload your first document</a>.</p>
+{% endif %}
+
+<div style="margin-top: 20px;">
+    <a href="{% url 'upload_document' %}" class="btn">Upload New Document</a>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'model/base.html' %}
+
+{% block title %}Query Document - Constitution RAG System{% endblock %}
+
+{% block content %}
+<h2>Query: {{ document.title }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    
+    <div class="form-group">
+        <label for="question">Ask a question about the Constitution:</label>
+        <textarea id="question" name="question" rows="3" placeholder="e.g., What are the fundamental rights mentioned in the constitution?" required>{{ request.POST.question }}</textarea>
+    </div>
+    
+    <button type="submit" class="btn">Get Answer</button>
+</form>
+
+{% if query %}
+    <div class="query-result">
+        <h3>Question:</h3>
+        <p><strong>{{ query.question }}</strong></p>
+        
+        <h3>Answer:</h3>
+        <div class="context-text">
+            {{ query.answer|linebreaks }}
+        </div>
+        
+        <p><small>Response generated in {{ query.response_time|floatformat:3 }} seconds</small></p>
+    </div>
+    
+    {% if similar_docs %}
+        <div style="margin-top: 20px;">
+            <h3>Related Sections:</h3>
+            {% for doc in similar_docs %}
+                <div class="document-card">
+                    <h4>Section {{ doc.rank }} (Similarity: {{ doc.similarity_score|floatformat:3 }})</h4>
+                    <div class="context-text">
+                        {{ doc.content|truncatewords:100 }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endif %}
+
+<div style="margin-top: 20px;">
+    <h3>Sample Questions:</h3>
+    <ul>
+        <li>"What are the fundamental rights?"</li>
+        <li>"What is the process for amending the constitution?"</li>
+        <li>"What are the duties of the President?"</li>
+        <li>"What is the structure of the Parliament?"</li>
+        <li>"What are the directive principles?"</li>
+    </ul>
+</div>
+{% endblock %}

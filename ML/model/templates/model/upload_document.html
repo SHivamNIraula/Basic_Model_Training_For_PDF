@@ -1,0 +1,33 @@
+{% extends 'model/base.html' %}
+
+{% block title %}Upload Document - Constitution RAG System{% endblock %}
+
+{% block content %}
+<h2>Upload Constitution PDF</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <div class="form-group">
+        <label for="title">Document Title:</label>
+        <input type="text" id="title" name="title" placeholder="e.g., Constitution of India" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="pdf_file">Select PDF File:</label>
+        <input type="file" id="pdf_file" name="pdf_file" accept=".pdf" required>
+    </div>
+    
+    <button type="submit" class="btn">Upload and Process</button>
+</form>
+
+<div style="margin-top: 20px;">
+    <h3>Instructions:</h3>
+    <ul>
+        <li>Upload a PDF file of your country's constitution</li>
+        <li>The system will extract text and create searchable chunks</li>
+        <li>Once processed, you can query the document using natural language</li>
+        <li>Processing may take a few moments depending on document size</li>
+    </ul>
+</div>
+{% endblock %}
